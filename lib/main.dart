@@ -32,19 +32,7 @@ class _SquareAnimationState extends State<SquareAnimation> {
   double _position = 0;
   double _lastScreenWidth = 0;
   bool _wasAtRightEdge = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      double screenWidth = MediaQuery.of(context).size.width;
-      double maxPosition = screenWidth - _squareSize;
-      setState(() {
-        _position = maxPosition / 2;
-        _lastScreenWidth = screenWidth;
-      });
-    });
-  }
+  bool _isFirstBuild = true;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +40,11 @@ class _SquareAnimationState extends State<SquareAnimation> {
       builder: (context, constraints) {
         double screenWidth = constraints.maxWidth;
         double maxPosition = screenWidth - _squareSize;
+
+        if (_isFirstBuild) {
+          _position = maxPosition / 2;
+          _isFirstBuild = false;
+        }
 
         if (_lastScreenWidth != screenWidth) {
           if (_wasAtRightEdge) {
